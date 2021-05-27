@@ -1,0 +1,124 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="corpo">
+		<title>Cadastro de Cliente</title>
+		<h:form id="formCadcliente">
+			<p:growl id="growl" showDetail="true" life="4000" />
+			<p:tabView id="tabcliente"
+				activeIndex="#{clienteBacking.indexTab}">
+				<p:tab id="cadDados" title="Dados Básicos">
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Nome:" />
+						<p:inputText value="#{clienteBacking.nomeCliente}"
+							size="45" maxlength="45" placeholder="Informe um nome" />
+
+						<p:outputLabel value="CPF:" />
+						<p:inputMask value="#{clienteBacking.cpf}" size="15"
+							maxlength="14" placeholder="Ex.: 123.123.123-12"
+							mask="999.999.999-99" />
+
+						<p:outputLabel value="RG:" />
+						<p:inputMask value="#{clienteBacking.rg}" size="15" placeholder="Informe um RG" onkeyup="masc_rg(this)"/>
+
+						<p:outputLabel value="Data de Nascimento:" />
+						<p:calendar id="button" value="#{clienteBacking.date}"
+							showOn="button" pattern="dd/MM/yyyy"
+							placeholder="Ex.:  01/01/2001" />
+
+						<p:outputLabel value="Idade:" />
+						<p:inputNumber value="#{clienteBacking.idade}" size="45"
+							maxlength="45" minValue="1" maxValue="150" decimalPlaces="0"
+							thousandSeparator="" />
+
+						<p:outputLabel value="Sexo:" />
+						<p:selectOneRadio id="sexo" value="#{clienteBacking.sexo}">
+							<f:selectItem itemLabel="MASCULINO" itemValue="MASCULINO" />
+							<f:selectItem itemLabel="FEMININO" itemValue="FEMININO" />
+						</p:selectOneRadio>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab id="cadEndereco" title="Dados de Endereço">
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Logradouro:" />
+						<p:selectOneMenu value="#{clienteBacking.logradouro}"
+							size="25" filter="true">
+							<f:selectItem itemValue="" itemLabel="- Selecione o logradouro -" />
+							<f:selectItems value="#{clienteBacking.listaLogradouro}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Endereço:" />
+						<p:inputText value="#{clienteBacking.endereco}" size="45"
+							maxlength="45" placeholder="Informe um endereço" />
+
+						<p:outputLabel value="Número:" />
+						<p:inputNumber value="#{clienteBacking.numero}" size="6"
+							maxlength="6" decimalPlaces="0" thousandSeparator="" />
+
+						<p:outputLabel value="Bairro:" />
+						<p:inputText value="#{clienteBacking.bairro}" size="45"
+							maxlength="45" placeholder="Informe um Bairro" />
+
+						<p:outputLabel value="Estado" />
+						<p:selectOneMenu id="estadoCombo"
+							value="#{clienteBacking.estado}" size="50" filter="true">
+							<f:selectItem itemValue="" itemLabel="- Selecione o Estado -" />
+							<f:selectItems value="#{clienteBacking.listaEstado}"
+								var="est" itemLabel="#{est.nome}" itemValue="#{est.idEstado}"/>
+								<p:ajax event="change" update="cidadeCombo" listener="#{clienteBacking.carregarCidade}"/>
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Cidade" />
+						<p:selectOneMenu id="cidadeCombo"
+							disabled="#{clienteBacking.comboCidade}"
+							value="#{clienteBacking.cidade}" size="50" filter="true">							
+							<f:selectItem itemValue="" itemLabel="- Selecione a cidade -" />
+							<f:selectItems value="#{clienteBacking.listaCidade}"
+								var="cid" itemLabel="#{cid.nome}" itemValue="#{cid.idCidade}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="CEP:" />
+						<p:inputMask value="#{clienteBacking.cep}" size="11"
+							maxlength="9" decimalPlaces="0" mask="99999-999" />
+					</h:panelGrid>
+				</p:tab>
+				<p:tab id="cadContato" title="Dados de Contato">
+					<h:panelGrid columns="4">
+						<p:outputLabel value="Telefone:" />
+						<p:inputMask value="#{clienteBacking.telefone}" size="15"
+							maxlength="14" decimalPlaces="0" mask="(99)9999-9999" />
+
+						<p:outputLabel value="Celular:" />
+						<p:inputMask value="#{clienteBacking.celular}" size="15"
+							maxlength="14" decimalPlaces="0" mask="(99)9 9999-9999" />
+					</h:panelGrid>
+					<h:panelGrid columns="3">
+						<p:outputLabel value="Email:" />
+						<p:inputText value="#{clienteBacking.email}" size="45"
+							maxlength="45" placeholder="Informe um email" />
+					</h:panelGrid>
+				</p:tab>				
+			<p:blockUI block="tabcliente" trigger="btn-salvar" />
+			<p:blockUI block="tabcliente" trigger="cidadeCombo" />
+			<p:blockUI block="tabcliente" trigger="estadoCombo" />		
+			</p:tabView>
+		
+			<h:panelGrid columns="3">
+				<p:commandButton id="btn-salvar" value="Salvar"
+					action="#{clienteBacking.cadastrar}" update="@form">
+				</p:commandButton>
+				<p:commandButton id="btn-cancelar" value="Cancelar"
+					action="#{clienteBacking.cancelar}" update="@form">
+				</p:commandButton>
+				<p:commandButton id="btn-sair" value="Sair"
+					action="#{clienteBacking.sair}" update="@form">
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
